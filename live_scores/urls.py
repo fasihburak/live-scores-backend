@@ -18,9 +18,11 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
+from scores.views import view_match
 
 urlpatterns = [
     path("chat/", include("chat.urls")),
+    path("matches/<uuid:match_id>/", view_match),
     path("admin/", admin.site.urls),
 ] +\
     static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) +\

@@ -1,12 +1,17 @@
 import json
-
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
+from django.contrib.auth.decorators import user_passes_test
+
+
+def admin_required(user):
+    return user.is_staff  # or user.is_superuser
 
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
+        print('USER', self.scope['user'])
         self.room_group_name = f"chat_{self.room_name}"
 
         # Join room group
@@ -24,6 +29,11 @@ class ChatConsumer(WebsocketConsumer):
 
     # Receive message from WebSocket
     def receive(self, text_data):
+        # Only allow admin users to send messages
+        user = self.scope.get('user')
+        if not user or not user.is_staff:
+            self.send(text_data=json.dumps({"error": "Only admin users may send messages."}))
+            return
         text_data_json = json.loads(text_data)
         message = text_data_json["message"]
 

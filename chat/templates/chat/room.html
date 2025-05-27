@@ -22,7 +22,16 @@
 
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-            document.querySelector('#chat-log').value += (data.message + '\n');
+            if(data.error) {
+                console.error("Error from server: " + data.error);
+                // Optionally, display the error in the UI:
+                const errorLog = document.querySelector('#chat-error-log');
+                if(errorLog) {
+                    errorLog.textContent = data.error;
+                }
+            } else if(data.message) {
+                document.querySelector('#chat-log').value += (data.message + '\n');
+            }
         };
 
         chatSocket.onclose = function(e) {
