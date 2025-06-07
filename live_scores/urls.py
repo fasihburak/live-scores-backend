@@ -18,12 +18,28 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.models import User
+from rest_framework import routers
 from scores.views import view_match
+from scores.views import (
+    UserViewSet, GroupViewSet, MatchViewSet, TeamViewSet,
+    PersonViewSet
+)
+
+# Routers provide an easy way of automatically determining the URL conf.
+router = routers.DefaultRouter()
+router.register(r'users', UserViewSet)
+router.register(r'groups', GroupViewSet)
+router.register(r'matches', MatchViewSet)
+router.register(r'teams', TeamViewSet)
+router.register(r'persons', PersonViewSet)
 
 urlpatterns = [
     path("chat/", include("chat.urls")),
-    path("matches/<uuid:match_id>/", view_match),
+    # path("matches/<uuid:match_id>/", view_match),
     path("admin/", admin.site.urls),
+    path('api/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ] +\
     static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) +\
     static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

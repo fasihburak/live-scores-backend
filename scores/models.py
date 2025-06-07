@@ -48,14 +48,22 @@ class Role(TimestampedModel):
     match = models.ForeignKey("Match", on_delete=models.PROTECT)
 
 
+def get_default_team_id():
+    from .models import Team
+    team, created = Team.objects.get_or_create(name="TBD")
+    return team.pk
+
+
 class Match(TimestampedModel):
     match_date = models.DateTimeField(null=True, blank=True)
     first_team = models.ForeignKey(Team, on_delete=models.PROTECT, 
                                    related_name='matches_home', 
-                                   null=True, blank=True)
+                                   null=True, blank=True,
+                                   default=get_default_team_id)
     second_team = models.ForeignKey(Team, on_delete=models.PROTECT,
                                     related_name='matches_away', 
-                                    null=True, blank=True)
+                                    null=True, blank=True,
+                                    default=get_default_team_id)
     STATUS_CHOICES = [
         ('to_be_scheduled', 'To Be Scheduled'),
         ('scheduled', 'Scheduled'),
@@ -75,7 +83,6 @@ class Match(TimestampedModel):
             raise ValidationError({'__all__': "Teams must be different."})
         if self.status == 'to_be_scheduled' and self.match_date != None:
             raise ValidationError({'__all__': "'Match date' - 'To Be Scheduled' conflict. Those are mutually exlusive."})
-            
 
     def __str__(self):
         if self.status == 'to_be_scheduled':
