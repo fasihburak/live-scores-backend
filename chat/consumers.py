@@ -1,7 +1,10 @@
 import json
+import logging
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from django.contrib.auth.decorators import user_passes_test
+
+logger = logging.getLogger(__name__)
 
 
 def admin_required(user):
@@ -12,6 +15,7 @@ class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
         print('USER', self.scope['user'])
+        logger.info(f"Receiving message from user: {self.scope['user']}")
         self.room_group_name = f"chat_{self.room_name}"
 
         # Join room group
