@@ -1,5 +1,6 @@
 import logging
 import requests
+import json
 from django.contrib import admin
 from .models import (
     Person, Role, InMatchEvent, Team, Match, Competition
@@ -46,16 +47,19 @@ class MatchAdmin(admin.ModelAdmin):
         if change:
             old_match_obj = self.model.objects.get(pk=obj.pk)
             changed_fields = {}
+            # The fields of the model that trigger a message to be sent
+            message_fields = [type(obj)._meta.get_field('status'),
+                              type(obj)._meta.get_field('first_team_goals_scored'),
+                              type(obj)._meta.get_field('second_team_goals_scored')]
             for field in obj._meta.fields:
                 field_name = field.name
                 old_value = getattr(old_match_obj, field_name)
                 new_value = getattr(obj, field_name)
                 if old_value != new_value:
                     print('FIELD', field)
-                    if field == type(obj)._meta.get_field('first_team_goals_scored'):
-                        print('Caught it!')
-                        send_message_to_group(group_name='chat_abcroom', message='qwert')
-                        # send_chat_message(message='ABBB')
+                    if field in message_fields:
+                        send_message_to_group(group_name='chat_' + str(obj.pk), 
+                                              message=json.dumps({field_name:new_value}))
                     changed_fields[field_name] = (old_value, new_value)
 
             if changed_fields:
