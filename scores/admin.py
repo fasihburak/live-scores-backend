@@ -32,6 +32,19 @@ def send_message_to_group(group_name, message):
 #     payload = {"text": message}
 #     requests.post(webhook_url, json=payload)
 
+class InMatchEventAdmin(admin.ModelAdmin):
+    def save_model(self, request, obj, form, change):
+        if change:
+            operation = 'update'
+        else:
+            operation = 'create'
+        send_message_to_group(group_name='chat_' + str(obj.match_id), 
+                        message=json.dumps({'operation':operation,
+                                            'type':new_value
+                            }
+                        )
+                    )
+        return super().save_model(request, obj, form, change)
 
 class InMatchEventInline(admin.TabularInline):
     model = InMatchEvent
@@ -45,6 +58,7 @@ class MatchAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         if change:
+            print('CHANGED STH!')
             old_match_obj = self.model.objects.get(pk=obj.pk)
             changed_fields = {}
             # The fields of the model that trigger a message to be sent
@@ -59,7 +73,12 @@ class MatchAdmin(admin.ModelAdmin):
                     print('FIELD', field)
                     if field in message_fields:
                         send_message_to_group(group_name='chat_' + str(obj.pk), 
-                                              message=json.dumps({field_name:new_value}))
+                                              message=json.dumps({
+                                                  'operation':'update',
+                                                  field_name:new_value
+                                                  }
+                                                )
+                                            )
                     changed_fields[field_name] = (old_value, new_value)
 
             if changed_fields:
@@ -73,7 +92,7 @@ class MatchAdmin(admin.ModelAdmin):
 
 admin.site.register(Person)
 admin.site.register(Role)
-admin.site.register(InMatchEvent)
+admin.site.register(InMatchEvent, InMatchEventAdmin)
 admin.site.register(Team)
 admin.site.register(Match, MatchAdmin)
 admin.site.register(Competition)
