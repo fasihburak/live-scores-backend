@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.contrib.auth.models import Group, User
 from rest_framework import permissions, viewsets
-from .models import Match, Team, Person
+from .models import Match, Team, Person, InMatchEvent
 from .serializers import (
     GroupSerializer, UserSerializer, MatchSerializer, 
-    TeamSummarySerializer, TeamSerializer, PersonSerializer
+    TeamSummarySerializer, TeamSerializer, PersonSerializer,
+    InMatchEventSerializer
     )
 from .permissions import IsAdminOrReadOnly
 
@@ -51,3 +52,16 @@ class TeamViewSet(BaseAuthorizedViewSet):
 class PersonViewSet(BaseAuthorizedViewSet):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
+
+
+class InMatchEventViewSet(BaseAuthorizedViewSet):
+    queryset = InMatchEvent.objects.all()
+    serializer_class = InMatchEventSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        match_id = self.request.query_params.get('match')
+        if match_id:
+            queryset = queryset.filter(match_id=match_id)
+            # If the match_id is given, order by minute.
+            return queryset.order_by('minute')

@@ -23,7 +23,7 @@ from rest_framework import routers
 from scores.views import view_match
 from scores.views import (
     UserViewSet, GroupViewSet, MatchViewSet, TeamViewSet,
-    PersonViewSet
+    PersonViewSet, InMatchEventViewSet
 )
 
 # Routers provide an easy way of automatically determining the URL conf.
@@ -31,6 +31,7 @@ router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'groups', GroupViewSet)
 router.register(r'matches', MatchViewSet)
+router.register(r'in-match-events', InMatchEventViewSet)
 router.register(r'teams', TeamViewSet)
 router.register(r'persons', PersonViewSet)
 

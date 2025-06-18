@@ -55,6 +55,14 @@ class MatchSerializer(serializers.HyperlinkedModelSerializer):
                   'first_team_goals_scored', 'second_team_goals_scored']
 
 
+class InMatchEventSerializer(serializers.HyperlinkedModelSerializer):
+    person = PersonSummarySerializer(read_only=True)
+    other_player = PersonSummarySerializer(read_only=True)
+    
+    class Meta:
+        model = InMatchEvent
+        fields = '__all__'
+
 class MessageType(Enum):
     MATCH = "match"
     IN_MATCH_EVENT = "in_match_event"
