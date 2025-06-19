@@ -94,11 +94,10 @@ class Match(TimestampedModel):
 class InMatchEvent(TimestampedModel):
     EVENT_TYPE_CHOICES = [
         ('card', 'Card'),
-        ('entry', 'Entry'),
-        ('exit', 'Exit'),
+        ('substitution', 'Substitution'),
         ('goal', 'Goal'),
     ]
-    event_type = models.CharField(max_length=10, choices=EVENT_TYPE_CHOICES)
+    event_type = models.CharField(max_length=20, choices=EVENT_TYPE_CHOICES)
     person = models.ForeignKey(Person, on_delete=models.PROTECT)
     match = models.ForeignKey(Match, on_delete=models.PROTECT, null=True, blank=True, related_name='events')
     minute = models.IntegerField(null=True, blank=True)
@@ -141,7 +140,7 @@ class InMatchEvent(TimestampedModel):
         # Example: Validations to ensure relevant fields are provided based on event_type.
         if self.event_type == 'card' and not self.color:
             raise ValidationError({'color': "A card event must have a color."})
-        if self.event_type in ['entry', 'exit'] and not self.other_player:
-            raise ValidationError({'other_player': "This event requires an other player."})
+        if self.event_type == 'substitution' and not self.other_player:
+            raise ValidationError({'other_player': "This event requires another player."})
         if self.event_type == 'goal' and not self.goal_type:
             raise ValidationError({'goal_type': "A goal event must have a goal type."})
