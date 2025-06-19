@@ -55,10 +55,10 @@ class MatchSerializer(serializers.HyperlinkedModelSerializer):
                   'first_team_goals_scored', 'second_team_goals_scored']
 
 
-class InMatchEventSerializer(serializers.HyperlinkedModelSerializer):
+class InMatchEventSerializer(serializers.ModelSerializer):
     person = PersonSummarySerializer(read_only=True)
     other_player = PersonSummarySerializer(read_only=True)
-    
+
     class Meta:
         model = InMatchEvent
         fields = '__all__'
