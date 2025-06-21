@@ -64,4 +64,4 @@ class InMatchEventViewSet(BaseAuthorizedViewSet):
         if match_id:
             queryset = queryset.filter(match_id=match_id)
             # If the match_id is given, order by minute.
-            return queryset.order_by('minute')
+            return queryset.order_by('-minute')
