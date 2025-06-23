@@ -32,8 +32,7 @@ def in_match_event_post_save(sender, instance, created, **kwargs):
     message_data = serializer.data
     print('message_data', message_data)
     group_name = 'chat_' + str(instance.match_id)
-    message = json.dumps(message_data, default=str)
-    send_message_to_group(group_name, message)
+    send_message_to_group(group_name, message_data)
     logger.info(f"Sent in-match event {operation} message for {instance.pk}")
 
 
@@ -44,8 +43,7 @@ def in_match_event_pre_delete(sender, instance, **kwargs):
     message_data = serializer.data
     message_data['operation_type'] = OperationType.DELETE.value
     group_name = 'chat_' + str(instance.match_id)
-    message = json.dumps(message_data, default=str)
-    send_message_to_group(group_name, message)
+    send_message_to_group(group_name, message_data)
     logger.info(f"Sent in-match event deletion message for {instance.pk}")
 
 
@@ -69,6 +67,5 @@ def match_pre_save(sender, instance, **kwargs):
             message_data['operation_type'] = OperationType.UPDATE.value
 
             group_name = 'chat_' + str(instance.id)
-            message = json.dumps(message_data, default=str)
-            send_message_to_group(group_name, message)
+            send_message_to_group(group_name, message_data)
             logger.info(f"Sent match update message for {instance.pk}")

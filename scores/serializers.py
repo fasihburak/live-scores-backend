@@ -153,7 +153,7 @@ def send_message_to_group(group_name, message):
         async_to_sync(channel_layer.group_send)(
             group_name,
             {
-                "type": "chat_message",  # This should match your consumer's method
+                "type": "event_message",  # This should match your consumer's method
                 "message": message,
             }
         )

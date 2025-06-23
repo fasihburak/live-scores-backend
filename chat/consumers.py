@@ -14,8 +14,8 @@ def admin_required(user):
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
-        print('USER', self.scope['user'])
-        logger.info(f"Receiving message from user: {self.scope['user']}")
+        # print('USER', self.scope['user'])
+        # logger.info(f"Receiving message from user: {self.scope['user']}")
         self.room_group_name = f"chat_{self.room_name}"
 
         # Join room group
@@ -39,6 +39,8 @@ class ChatConsumer(WebsocketConsumer):
             self.send(text_data=json.dumps({"error": "Only admin users may send messages."}))
             return
         text_data_json = json.loads(text_data)
+        print(type(text_data_json))
+        print('text_data_json', text_data_json)
         message = text_data_json["message"]
 
         # Send message to room group
@@ -49,6 +51,13 @@ class ChatConsumer(WebsocketConsumer):
     # Receive message from room group
     def chat_message(self, event):
         message = event["message"]
-
+        print('Here is the event', event)
+        print('Type the event', type(event))
         # Send message to WebSocket
         self.send(text_data=json.dumps({"message": message}))
+
+    # Receive message from room group
+    def event_message(self, event):
+        message = event["message"]
+        # Send message to WebSocket
+        self.send(text_data=json.dumps(message))
