@@ -22,6 +22,7 @@
 
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
+            console.log('Received WebSocket message:', data);
             if(data.error) {
                 console.error("Error from server: " + data.error);
                 // Optionally, display the error in the UI:
@@ -29,8 +30,10 @@
                 if(errorLog) {
                     errorLog.textContent = data.error;
                 }
-            } else if(data.message) {
-                document.querySelector('#chat-log').value += (data.message + '\n');
+            }
+                      
+            if(data) {
+                document.querySelector('#chat-log').value += (JSON.stringify(data) + '\n');
             }
         };
 
