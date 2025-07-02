@@ -19,11 +19,15 @@ from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.models import User
+from drf_spectacular.views import (
+    SpectacularAPIView, SpectacularSwaggerView, 
+    SpectacularRedocView
+)
 from rest_framework import routers
 from scores.views import view_match
 from scores.views import (
     UserViewSet, GroupViewSet, MatchViewSet, TeamViewSet,
-    PersonViewSet, InMatchEventViewSet
+    PersonViewSet, InMatchEventViewSet, CompetitionViewSet
 )
 
 # Routers provide an easy way of automatically determining the URL conf.
@@ -34,6 +38,7 @@ router.register(r'matches', MatchViewSet)
 router.register(r'in-match-events', InMatchEventViewSet)
 router.register(r'teams', TeamViewSet)
 router.register(r'persons', PersonViewSet)
+router.register(r'competitions', CompetitionViewSet)
 
 urlpatterns = [
     path("chat/", include("chat.urls")),
@@ -41,6 +46,9 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ] +\
     static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) +\
     static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

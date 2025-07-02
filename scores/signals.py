@@ -52,20 +52,22 @@ def match_pre_save(sender, instance, **kwargs):
     '''Do not use post_save for this receiver because "created" argument 
     will return True even if there is a change in a related field. So, it makes sense
     to use pre_save and compare the fields on the old object and the new one.'''
-    if instance.pk: 
-        old_instance = sender.objects.get(pk=instance.pk) 
+    # If the instance is being created, don't try to retrieve an old version.
+    if instance._state.adding:
+        return
+    old_instance = sender.objects.get(pk=instance.pk) 
 
-        # Compare specific fields – here you can add more comparisons as needed.
-        if old_instance.status != instance.status or \
-        old_instance.first_team_goals_scored != instance.first_team_goals_scored or \
-        old_instance.second_team_goals_scored != instance.second_team_goals_scored:
-            logger.info(f"Changes detected in Match {instance.pk}")
-            
-            # Now you can create your message with the new state
-            serializer = MessageSerializerMatch(instance, context={'request': None})
-            message_data = serializer.data
-            message_data['operation_type'] = OperationType.UPDATE.value
+    # Compare specific fields – here you can add more comparisons as needed.
+    if old_instance.status != instance.status or \
+    old_instance.first_team_goals_scored != instance.first_team_goals_scored or \
+    old_instance.second_team_goals_scored != instance.second_team_goals_scored:
+        logger.info(f"Changes detected in Match {instance.pk}")
+        
+        # Now you can create your message with the new state
+        serializer = MessageSerializerMatch(instance, context={'request': None})
+        message_data = serializer.data
+        message_data['operation_type'] = OperationType.UPDATE.value
 
-            group_name = 'chat_' + str(instance.id)
-            send_message_to_group(group_name, message_data)
-            logger.info(f"Sent match update message for {instance.pk}")
+        group_name = 'chat_' + str(instance.id)
+        send_message_to_group(group_name, message_data)
+        logger.info(f"Sent match update message for {instance.pk}")

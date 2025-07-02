@@ -4,7 +4,7 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from rest_framework import serializers
 from django.contrib.auth.models import Group, User
-from .models import Match, InMatchEvent, Team, Person
+from .models import Match, InMatchEvent, Team, Person, Competition
 
 logger = logging.getLogger(__name__)
 
@@ -62,6 +62,14 @@ class InMatchEventSerializer(serializers.ModelSerializer):
     class Meta:
         model = InMatchEvent
         fields = '__all__'
+
+
+class CompetitionSerializer(serializers.HyperlinkedModelSerializer):
+    
+    class Meta:
+        model = Competition
+        fields = ['id', 'name', 'scope']
+
 
 class MessageType(Enum):
     MATCH = "match"

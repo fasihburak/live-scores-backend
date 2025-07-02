@@ -55,6 +55,7 @@ def get_default_team_id():
 
 
 class Match(TimestampedModel):
+    competition = models.ForeignKey(Competition, on_delete=models.SET_NULL, null=True, blank=True)
     match_date = models.DateTimeField(null=True, blank=True)
     first_team = models.ForeignKey(Team, on_delete=models.PROTECT, 
                                    related_name='matches_home', 
@@ -85,10 +86,12 @@ class Match(TimestampedModel):
             raise ValidationError({'__all__': "'Match date' - 'To Be Scheduled' conflict. Those are mutually exlusive."})
 
     def __str__(self):
-        if self.status == 'to_be_scheduled':
+        if self.match_date:
+            date_detail = self.match_date
+        elif self.status == 'to_be_scheduled':
             date_detail = 'To Be Scheduled'
         else:
-            date_detail = self.match_date
+            date_detail = 'Postponed'
         return f'{self.first_team.name} - {self.second_team.name} ({date_detail})'
 
 class InMatchEvent(TimestampedModel):
