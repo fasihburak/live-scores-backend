@@ -1,4 +1,6 @@
+import os
 import uuid
+from django.conf import settings
 from django.db import models
 from django.core.exceptions import ValidationError
 
@@ -30,6 +32,12 @@ class Team(TimestampedModel):
     def __str__(self):
         return self.name
     
+    @property
+    def logo_or_default_url(self):
+        if self.logo:
+            return self.logo.url
+        return os.path.join('http://localhost:8000', 'media', 'default_team_logo.png')
+
 
 class Person(TimestampedModel):
     given_name = models.CharField(max_length=200)

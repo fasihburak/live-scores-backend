@@ -33,17 +33,25 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['given_name', 'middle_name', 'family_name', 'birth_date']   
 
 
-class TeamSerializer(serializers.HyperlinkedModelSerializer):
+class BaseTeamSerializer(serializers.HyperlinkedModelSerializer):
+    logo = serializers.SerializerMethodField()
+
+    def get_logo(self, obj):
+        return obj.logo_or_default_url
+
+
+class TeamSerializer(BaseTeamSerializer):
     people = PersonSummarySerializer(many=True, read_only=True)
+
     class Meta:
         model = Team
         fields = ['id', 'logo', 'name', 'people']
 
 
-class TeamSummarySerializer(serializers.HyperlinkedModelSerializer):
+class TeamSummarySerializer(BaseTeamSerializer):
     class Meta:
         model = Team
-        fields = ['id', 'logo', 'name']       
+        fields = ['id', 'logo', 'name']
 
 
 class MatchSerializer(serializers.HyperlinkedModelSerializer):
