@@ -37,8 +37,14 @@ class BaseTeamSerializer(serializers.HyperlinkedModelSerializer):
     logo = serializers.SerializerMethodField()
 
     def get_logo(self, obj):
-        return obj.logo_or_default_url
-
+        request = self.context.get('request')
+        if obj.logo:
+            logo_path = obj.logo.url
+        else:
+            # Default logo path
+            logo_path = '/media/default_team_logo.png'
+        return request.build_absolute_uri(logo_path)
+    
 
 class TeamSerializer(BaseTeamSerializer):
     people = PersonSummarySerializer(many=True, read_only=True)
