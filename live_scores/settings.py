@@ -207,8 +207,8 @@ LOGGING = {
 # }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'My API',
-    'DESCRIPTION': 'API documentation for my Django backend',
+    'TITLE': 'Live Scores API',
+    'DESCRIPTION': 'API documentation for Live Scores Django backend',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
