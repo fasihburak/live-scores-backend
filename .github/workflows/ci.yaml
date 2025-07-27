@@ -27,3 +27,12 @@ jobs:
       with:
         name: test-report
         path: reports/test-results.xml
+
+    - name: Publish test results
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: Pytest Results
+        path: reports/test-results.xml
+        reporter: jest-junit
+        
