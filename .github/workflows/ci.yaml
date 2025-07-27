@@ -28,7 +28,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.11'
+        python-version: '3.12'
 
     - name: Install dependencies
       run: |
@@ -37,10 +37,10 @@ jobs:
 
     - name: Run tests and generate report
       run: |
-        pytest --junitxml=reports/test-results.xml --cov=. --cov-report=xml
+        pytest --junitxml=reports/test-results.xml
 
     - name: Upload test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: test-report
         path: reports/test-results.xml
