@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -82,7 +83,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+            "hosts": [(os.environ['REDIS_HOST'], int(os.environ['REDIS_PORT']))],
         },
     },
 }
@@ -90,14 +91,28 @@ CHANNEL_LAYERS = {
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+if DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.environ['DB_NAME'],
+            "USER": os.environ['DB_USERNAME'],
+            "PASSWORD": os.environ['DB_PASSWORD'],
+            "HOST": os.environ['DB_HOST'],
+            "PORT": int(os.environ['DB_PORT']),
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "prod_db",
+            "USER": "prod_user",
+            "PASSWORD": "prod_password",
+            "HOST": "prod-db-host",
+            "PORT": "5432",
+        }
+    }
 
 
 # Password validation
@@ -183,25 +198,6 @@ LOGGING = {
         "level": "DEBUG",
     },
 }
-
-# LOGGING = {
-#     "version": 1,
-#     "disable_existing_loggers": False,
-#     "handlers": {
-#         "file": {
-#             "level": "DEBUG",
-#             "class": "logging.FileHandler",
-#             "filename": BASE_DIR / "django.log",
-#         },
-#     },
-#     "loggers": {
-#         "django": {
-#             "handlers": ["file"],
-#             "level": "DEBUG",
-#             "propagate": True,
-#         },
-#     },
-# }
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Live Scores API',

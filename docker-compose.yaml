@@ -1,0 +1,34 @@
+services:
+  django:
+    build: .
+    container_name: django-app
+    command: >
+      sh -c "/wait-for-it.sh postgres-db:5432 -- python manage.py migrate && pytest"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres-db
+      - redis
+    environment:
+      DEBUG: True
+      DJANGO_ALLOWED_HOSTS: localhost 127.0.0.1 [::1]
+      DB_HOST: postgres-db
+      DB_PORT: 5432
+      DB_NAME: django-postgres-db
+      DB_USERNAME: postgres
+      DB_PASSWORD: mypassword
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+  postgres-db:
+    image: postgres:16.6-alpine
+    restart: always
+    # set shared memory limit when using docker compose
+    shm_size: 128mb
+    environment:
+      POSTGRES_DB: django-postgres-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mypassword
+  redis:
+    image: redis:7
