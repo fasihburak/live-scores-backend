@@ -1,46 +1,29 @@
 name: Django Tests
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:16.6-alpine
-        env:
-          POSTGRES_DB: django-postgres-db
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: mypassword
-        ports:
-          - 5432:5432
-        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=5
-
-      redis:
-        image: redis:7
-        ports:
-          - 6379:6379
-
     steps:
     - uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.12'
+    - name: Set up Docker Compose
+      run: docker-compose -f docker-compose.yml up -d --build
 
-    - name: Install dependencies
-      run: |
-        pip install -r requirements.txt
-        mkdir -p reports
+    - name: Wait for DB to be ready
+      run: docker-compose exec django ./wait-for-it.sh postgres-db:5432
 
-    - name: Run tests and generate report
-      run: |
-        pytest --junitxml=reports/test-results.xml
+    - name: Run tests
+      run: docker-compose run --rm django pytest --junitxml=reports/test-results.xml
 
     - name: Upload test results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: test-report
         path: reports/test-results.xml
