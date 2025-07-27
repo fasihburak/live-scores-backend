@@ -14,13 +14,13 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Set up Docker Compose
-      run: docker-compose -f docker-compose.yml up -d --build
+      run: docker compose -f docker-compose.yml up -d --build
 
     - name: Wait for DB to be ready
-      run: docker-compose exec django ./wait-for-it.sh postgres-db:5432
+      run: docker compose exec django ./wait-for-it.sh postgres-db:5432
 
     - name: Run tests
-      run: docker-compose run --rm django pytest --junitxml=reports/test-results.xml
+      run: docker compose run --rm django pytest --junitxml=reports/test-results.xml
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
