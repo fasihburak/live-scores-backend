@@ -72,4 +72,5 @@ def test_message_sent_on_match_update():
         )
         mock_send_message.assert_called_once_with(*args)
 
-
+def test_fail():
+    assert 1 == 0
