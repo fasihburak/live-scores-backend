@@ -6,10 +6,14 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  AWS_REGION : "eu-central-1"
+
 permissions:
   contents: read
   actions: read
   checks: write
+  id-token: write # For GitHub's OIDC provider to create a JSON Web Token for every run.
 
 jobs:
   test:
@@ -37,3 +41,31 @@ jobs:
         name: Pytest Results
         path: reports/test-results.xml
         reporter: jest-junit
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test  # ensures deploy runs only if test succeeds
+    if: github.ref == 'refs/heads/main'  # only deploy from main branch
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials
+        with:
+          role-to-assume: arn:aws:iam::922178759732:role/Github-Actions
+          # role-session-name: samplerolesession
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push docker image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: livescores/django-backend
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG

@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
+from . import secrets
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,7 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-4eoosm-mtw^hq_y#95xu&tns2!gyrxve$170q60l^4+3bc8*+t'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = int(os.environ['DEBUG'])
+if not DEBUG:
+    SECRET_DICT = secrets.get_secret()
+
 
 ALLOWED_HOSTS = []
 
@@ -95,22 +99,22 @@ if DEBUG:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
+            "HOST": os.environ['DB_HOST'],
+            "PORT": int(os.environ['DB_PORT']),
             "NAME": os.environ['DB_NAME'],
             "USER": os.environ['DB_USERNAME'],
             "PASSWORD": os.environ['DB_PASSWORD'],
-            "HOST": os.environ['DB_HOST'],
-            "PORT": int(os.environ['DB_PORT']),
         }
     }
 else:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
-            "NAME": "prod_db",
-            "USER": "prod_user",
-            "PASSWORD": "prod_password",
-            "HOST": "prod-db-host",
-            "PORT": "5432",
+            "HOST": os.environ['DB_HOST'],
+            "PORT": SECRET_DICT['DB_PORT'],
+            "NAME": SECRET_DICT['DB_NAME'],
+            "USER": SECRET_DICT['DB_USERNAME'],
+            "PASSWORD": SECRET_DICT['DB_PASSWORD'],
         }
     }
 
@@ -195,7 +199,7 @@ LOGGING = {
     },
     "root": {
         "handlers": ["console"],
-        "level": "DEBUG",
+        "level": "DEBUG" if DEBUG else "INFO",
     },
 }
 
