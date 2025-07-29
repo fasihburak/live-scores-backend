@@ -10,7 +10,7 @@ services:
       - postgres-db
       - redis
     environment:
-      DEBUG: True
+      DEBUG: 1
       DJANGO_ALLOWED_HOSTS: localhost 127.0.0.1 [::1]
       DB_HOST: postgres-db
       DB_PORT: 5432
