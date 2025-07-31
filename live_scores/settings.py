@@ -83,15 +83,24 @@ TEMPLATES = [
 # WSGI_APPLICATION = 'live_scores.wsgi.application'
 ASGI_APPLICATION = 'live_scores.asgi.application'
 # Channels
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [(os.environ['REDIS_HOST'], int(os.environ['REDIS_PORT']))],
+if DEBUG:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [(os.environ['REDIS_HOST'], int(os.environ['REDIS_PORT']))],
+            },
         },
-    },
-}
-
+    }
+else:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [(SECRET_DICT['REDIS_HOST'], int(SECRET_DICT['REDIS_PORT']))],
+            },
+        },
+    }
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
