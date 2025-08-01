@@ -80,3 +80,4 @@ jobs:
             --comment "Deploy new Docker image" \
             --parameters commands=["/opt/custom_scripts/deploy.sh ${{ github.sha }}"] \
             --output json
+      
