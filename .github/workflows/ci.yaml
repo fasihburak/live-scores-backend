@@ -74,7 +74,7 @@ jobs:
       - name: Trigger EC2 deploy script via SSM
         run: |
           aws ssm send-command \
-            --document-name "AWS-RunCustomcript" \
+            --document-name "AWS-RunShellScript" \
             --instance-ids ${{ secrets.DJANGO_EC2_INSTANCE_ID }} \
             --region ${{ env.AWS_REGION }} \
             --comment "Deploy new Docker image" \
