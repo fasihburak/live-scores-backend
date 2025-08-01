@@ -78,6 +78,5 @@ jobs:
             --instance-ids ${{ secrets.DJANGO_EC2_INSTANCE_ID }} \
             --region ${{ env.AWS_REGION }} \
             --comment "Deploy new Docker image" \
-            # --parameters commands=["/opt/custom_scripts/deploy.sh ${{ github.sha }}"] \
-            --parameters commands=["/opt/custom_scripts/deploy.sh"] \
+            --parameters commands=["/opt/custom_scripts/deploy.sh ${{ github.sha }}"] \
             --output json
