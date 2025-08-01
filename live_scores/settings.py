@@ -119,7 +119,7 @@ else:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
-            "HOST": os.environ['DB_HOST'],
+            "HOST": SECRET_DICT['DB_HOST'],
             "PORT": SECRET_DICT['DB_PORT'],
             "NAME": SECRET_DICT['DB_NAME'],
             "USER": SECRET_DICT['DB_USERNAME'],
