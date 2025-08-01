@@ -64,9 +64,20 @@ jobs:
 
       - name: Build, tag, and push docker image to Amazon ECR
         env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          # REGISTERY: Evaluates to ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }} 
           REPOSITORY: livescores/django-backend
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+      - name: Trigger EC2 deploy script via SSM
+        run: |
+          aws ssm send-command \
+            --document-name "AWS-RunCustomcript" \
+            --instance-ids ${{ secrets.DJANGO_EC2_INSTANCE_ID }} \
+            --region ${{ env.AWS_REGION }} \
+            --comment "Deploy new Docker image" \
+            # --parameters commands=["/opt/custom_scripts/deploy.sh ${{ github.sha }}"] \
+            --parameters commands=["/opt/custom_scripts/deploy.sh"] \
+            --output json
