@@ -78,6 +78,6 @@ jobs:
             --instance-ids ${{ vars.DJANGO_EC2_INSTANCE_ID }} \
             --region ${{ env.AWS_REGION }} \
             --comment "Deploy new Docker image" \
-            --parameters commands=["/opt/custom_scripts/deploy.sh ${{ github.sha }}"] \
+            --parameters commands=["/home/ec2-user/deploy.sh ${{ github.sha }}"] \
             --output json
       
