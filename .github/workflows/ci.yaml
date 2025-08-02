@@ -75,7 +75,7 @@ jobs:
         run: |
           aws ssm send-command \
             --document-name "AWS-RunShellScript" \
-            --instance-ids ${{ secrets.DJANGO_EC2_INSTANCE_ID }} \
+            --instance-ids ${{ vars.DJANGO_EC2_INSTANCE_ID }} \
             --region ${{ env.AWS_REGION }} \
             --comment "Deploy new Docker image" \
             --parameters commands=["/opt/custom_scripts/deploy.sh ${{ github.sha }}"] \
