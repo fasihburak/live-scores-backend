@@ -30,7 +30,7 @@ if not DEBUG:
     SECRET_DICT = secrets.get_secret()
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['livescores-api.onenil.io']
 
 
 # Application definition
