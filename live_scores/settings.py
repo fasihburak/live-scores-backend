@@ -221,17 +221,17 @@ if not DEBUG:
         "default": {
             "BACKEND": "storages.backends.s3.S3Storage",
             "OPTIONS": {
-                "AWS_STORAGE_BUCKET_NAME": SECRET_DICT['S3_BUCKET_NAME'],
-                "AWS_LOCATION": '/uploads',
-                "AWS_S3_CUSTOM_DOMAIN": SECRET_DICT['CLOUDFRONT_DOMAIN']
+                "bucket_name": SECRET_DICT['S3_BUCKET_NAME'],
+                "location": 'uploads',
+                "custom_domain": SECRET_DICT['CLOUDFRONT_DOMAIN']
             },
         },
         "staticfiles": {
             "BACKEND": "storages.backends.s3.S3Storage",
             "OPTIONS": {
-                "AWS_STORAGE_BUCKET_NAME": SECRET_DICT['S3_BUCKET_NAME'],
-                "AWS_LOCATION": '/static',
-                "AWS_S3_CUSTOM_DOMAIN": SECRET_DICT['CLOUDFRONT_DOMAIN']
+                "bucket_name": SECRET_DICT['S3_BUCKET_NAME'],
+                "location": 'static',
+                "custom_domain": SECRET_DICT['CLOUDFRONT_DOMAIN']
             },
         },
     }
