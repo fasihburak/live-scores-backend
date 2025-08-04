@@ -80,4 +80,3 @@ jobs:
             --region ${{ env.AWS_REGION }} \
             --comment "Run run.sh inside EC2 instance" \
             --parameters commands=["/opt/custom_scripts/run.sh", "${{ github.repository }}", "${{ env.REGISTRY }}/${{ env.REPOSITORY }}", "${{ env.IMAGE_TAG }}"]
-            --output json
