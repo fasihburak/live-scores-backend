@@ -7,6 +7,9 @@ set -e
 ECR_REPO_URI="$1"
 IMAGE_TAG="$2"
 
+echo "ECR_REPO_URI: $ECR_REPO_URI"
+echo "IMAGE_TAG: $IMAGE_TAG"
+
 # Remove unused images
 docker image prune -f
 
