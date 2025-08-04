@@ -84,6 +84,3 @@ jobs:
                                       ${{ env.REGISTRY }}/${{ env.REPOSITORY }} \
                                       ${{ env.IMAGE_TAG }}"] \
             --output json
-      
-                GITHUB_REPO: ${{ github.repository }}
-          ECR_REPO_URL: 
