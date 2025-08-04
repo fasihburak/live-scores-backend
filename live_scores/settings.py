@@ -164,14 +164,6 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
-STATIC_URL = 'static/'
-
-MEDIA_ROOT = BASE_DIR / 'media'
-MEDIA_URL = 'media/'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -229,9 +221,25 @@ if not DEBUG:
         "default": {
             "BACKEND": "storages.backends.s3.S3Storage",
             "OPTIONS": {
-            "AWS_STORAGE_BUCKET_NAME": SECRET_DICT['S3_BUCKET_NAME'],
-            "AWS_LOCATION": '/uploads',
-            "AWS_S3_CUSTOM_DOMAIN": SECRET_DICT['CLOUDFRONT_DOMAIN']
+                "AWS_STORAGE_BUCKET_NAME": SECRET_DICT['S3_BUCKET_NAME'],
+                "AWS_LOCATION": '/uploads',
+                "AWS_S3_CUSTOM_DOMAIN": SECRET_DICT['CLOUDFRONT_DOMAIN']
             },
-        }
+        },
+        "staticfiles": {
+            "BACKEND": "storages.backends.s3.S3Storage",
+            "OPTIONS": {
+                "AWS_STORAGE_BUCKET_NAME": SECRET_DICT['S3_BUCKET_NAME'],
+                "AWS_LOCATION": '/static',
+                "AWS_S3_CUSTOM_DOMAIN": SECRET_DICT['CLOUDFRONT_DOMAIN']
+            },
+        },
     }
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/4.2/howto/static-files/
+
+STATIC_URL = 'static/'
+
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = 'media/'
