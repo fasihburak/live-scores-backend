@@ -76,7 +76,7 @@ jobs:
         run: |
           aws ssm send-command \
             --document-name "AWS-RunShellScript" \
-            --instance-ids ${{ vars.DJANGO_EC2_INSTANCE_ID }} \
+            --targets "Key=tag:Name,Values=django-instance" \
             --region ${{ env.AWS_REGION }} \
             --comment "Run run.sh inside EC2 instance" \
             --parameters commands=["/opt/custom_scripts/run.sh \
