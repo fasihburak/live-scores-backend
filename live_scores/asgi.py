@@ -20,6 +20,7 @@ application = ProtocolTypeRouter(
             [
                 "http://localhost:3000", # For react
                 "http://localhost:8000", # For django
+                "https://live-scores-frontend.vercel.app"
                 ],
         ),
     }
