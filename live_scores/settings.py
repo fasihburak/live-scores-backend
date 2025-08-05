@@ -243,3 +243,5 @@ STATIC_URL = 'static/'
 
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = 'media/'
+
+CSRF_TRUSTED_ORIGINS = ["https://livescores-api.onenil.io"]
