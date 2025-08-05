@@ -11,7 +11,8 @@ echo "ECR_REPO_URI: $ECR_REPO_URI"
 echo "IMAGE_TAG: $IMAGE_TAG"
 
 # Remove unused images
-docker image prune -f
+docker container prune -f
+docker image prune -a -f
 
 # Login to ECR
 aws ecr get-login-password --region eu-central-1 | \
