@@ -92,8 +92,12 @@ jobs:
               --region $AWS_REGION \
               --output json | jq -r '.CommandInvocations[0].Status')
             echo "Current status: $STATUS"
-            if [[ "$STATUS" == "Success" || "$STATUS" == "Cancelled" || "$STATUS" == "Failed" || "$STATUS" == "TimedOut" ]]; then
+            if [[ "$STATUS" != "InProgress" ]]; then
               break
             fi
             sleep 5
           done
+          if [[ $STATUS != "Success" ]]; then
+            echo "SSM command failed with status: $STATUS"
+            exit 1
+          fi
