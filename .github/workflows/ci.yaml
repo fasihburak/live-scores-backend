@@ -74,10 +74,24 @@ jobs:
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
       - name: Trigger EC2 deploy script via SSM
         run: |
-          aws ssm send-command \
+          COMMAND_ID=$(aws ssm send-command \
             --document-name "AWS-RunShellScript" \
             --targets "Key=tag:Name,Values=django-instance" \
             --region ${{ env.AWS_REGION }} \
             --comment "Run run.sh inside EC2 instance" \
             --parameters commands=["/opt/custom_scripts/run.sh ${{ github.repository }} ${{ steps.login-ecr.outputs.registry }}/livescores/django-backend ${{ github.sha }}"] \
-            --output json
+            --output json | jq -r '.Command.CommandId')
+      - name: Wait until the command finishes executing
+        run: |
+          while true; do
+            STATUS=$(aws ssm list-command-invocations \
+              --command-id "${{ $COMMAND_ID }}" \
+              --details \
+              --region $AWS_REGION \
+              --output json | jq -r '.CommandInvocations[0].Status')
+            echo "Current status: $STATUS"
+            if [[ "$STATUS" == "Success" || "$STATUS" == "Cancelled" || "$STATUS" == "Failed" || "$STATUS" == "TimedOut" ]]; then
+              break
+            fi
+            sleep 5
+          done
