@@ -81,11 +81,12 @@ jobs:
             --comment "Run run.sh inside EC2 instance" \
             --parameters commands=["/opt/custom_scripts/run.sh ${{ github.repository }} ${{ steps.login-ecr.outputs.registry }}/livescores/django-backend ${{ github.sha }}"] \
             --output json | jq -r '.Command.CommandId')
+          echo "command_id=$COMMAND_ID" >> $GITHUB_OUTPUT
       - name: Wait until the command finishes executing
         run: |
           while true; do
             STATUS=$(aws ssm list-command-invocations \
-              --command-id "${{ $COMMAND_ID }}" \
+              --command-id "${{ steps.ssm.outputs.command_id }}" \
               --details \
               --region $AWS_REGION \
               --output json | jq -r '.CommandInvocations[0].Status')
