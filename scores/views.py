@@ -1,10 +1,10 @@
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema
 from datetime import timedelta
 from django.shortcuts import render
 from django.contrib.auth.models import Group, User
 from rest_framework import permissions, viewsets
+from rest_framework.exceptions import ValidationError, NotFound
 from .models import Match, Team, Person, InMatchEvent, Competition
 from .serializers import (
     GroupSerializer, UserSerializer, MatchSerializer, 
@@ -36,7 +36,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
-class BaseAuthorizedViewSet(viewsets.ModelViewSet):
+class BaseAuthorizedViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
 
 
@@ -82,9 +82,11 @@ class InMatchEventViewSet(BaseAuthorizedViewSet):
     serializer_class = InMatchEventSerializer
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        match_id = self.request.query_params.get('match')
-        if match_id:
-            queryset = queryset.filter(match_id=match_id)
-            # If the match_id is given, order by minute.
-            return queryset.order_by('-minute')
+        match_pk = self.kwargs.get('match_pk')
+        if match_pk is None:
+            raise ValidationError("match_pk cannot be null.")
+        # Check if the match exists
+        if not Match.objects.filter(pk=match_pk).exists():
+            raise NotFound(f"Match with id '{match_pk}' not found.")
+        return InMatchEvent.objects.filter(match_id=match_pk).order_by('-minute')
+    

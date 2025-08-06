@@ -23,26 +23,26 @@ from drf_spectacular.views import (
     SpectacularAPIView, SpectacularSwaggerView, 
     SpectacularRedocView
 )
-from rest_framework import routers
+from rest_framework_nested import routers
 from scores.views import view_match
 from scores.views import (
     UserViewSet, GroupViewSet, MatchViewSet, TeamViewSet,
     PersonViewSet, InMatchEventViewSet, CompetitionViewSet
 )
 
-# Routers provide an easy way of automatically determining the URL conf.
-router = routers.DefaultRouter()
-router.register(r'users', UserViewSet)
-router.register(r'groups', GroupViewSet)
-router.register(r'matches', MatchViewSet)
-router.register(r'in-match-events', InMatchEventViewSet)
+router = routers.SimpleRouter()
+router.register(r'matches', MatchViewSet, basename='match')
 router.register(r'teams', TeamViewSet)
 router.register(r'persons', PersonViewSet)
 router.register(r'competitions', CompetitionViewSet)
 
+matches_router = routers.NestedSimpleRouter(router, r'matches', lookup='match')
+matches_router.register(r'in-match-events', InMatchEventViewSet, basename='match-inmatch-events')
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('api/', include(router.urls)),
+    path('api/', include(matches_router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
