@@ -41,8 +41,6 @@ router.register(r'persons', PersonViewSet)
 router.register(r'competitions', CompetitionViewSet)
 
 urlpatterns = [
-    path("chat/", include("chat.urls")),
-    # path("matches/<uuid:match_id>/", view_match),
     path("admin/", admin.site.urls),
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),

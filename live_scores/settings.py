@@ -41,7 +41,6 @@ ALLOWED_HOSTS = ['livescores-api.onenil.io', 'localhost']
 
 INSTALLED_APPS = [
     'daphne',
-    'chat',
     'scores.apps.ScoresConfig',
     'django.contrib.admin',
     'django.contrib.auth',

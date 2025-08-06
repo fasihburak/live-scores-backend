@@ -10,7 +10,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "live_scores.settings")
 # is populated before importing code that may import ORM models.
 django_asgi_app = get_asgi_application()
 
-from chat.routing import websocket_urlpatterns
+from scores.routing import websocket_urlpatterns
 
 application = ProtocolTypeRouter(
     {
@@ -21,7 +21,7 @@ application = ProtocolTypeRouter(
                 "http://localhost:3000", # For react
                 "http://localhost:8000", # For django
                 "https://live-scores-frontend.vercel.app"
-                ],
+            ],
         ),
     }
 )
