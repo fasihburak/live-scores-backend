@@ -1,13 +1,11 @@
 ## To run the project locally
-- Start redis
+- Run the project with docker compose
   ```bash
-  docker run --rm -p 6379:6379 redis:7
+  docker compose up
   ```
-- Run development server
+
+## To deploy the project
+- Deploy the project with docker compose
   ```bash
-  python manage.py runserver
+  docker compose -f docker-compose.prod.yaml up -d
   ```
-## To run end-to-end tests 
-- Install [Google Chrome](https://www.google.com/chrome/).
-- Install [Chrome Driver]((https://googlechromelabs.github.io/chrome-for-testing/) ) for the same version as above.
-- Install selenium `pip install selenium`
