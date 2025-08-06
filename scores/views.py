@@ -20,7 +20,7 @@ def view_match(request, match_id):
 
 class UserViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to be viewed or edited.
+    API endpoint that allows users to be viewed.
     """
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
@@ -29,7 +29,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class GroupViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed or edited.
+    API endpoint that allows groups to be viewed.
     """
     queryset = Group.objects.all().order_by('name')
     serializer_class = GroupSerializer
@@ -42,7 +42,7 @@ class BaseAuthorizedViewSet(viewsets.ReadOnlyModelViewSet):
 
 class CompetitionViewSet(BaseAuthorizedViewSet):
     """
-    API endpoint that allows competitions to be viewed or edited.
+    API endpoint that allows competitions to be viewed.
     """
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
@@ -50,7 +50,7 @@ class CompetitionViewSet(BaseAuthorizedViewSet):
 
 class MatchViewSet(BaseAuthorizedViewSet):
     """
-    API endpoint that allows matches to be viewed or edited.
+    API endpoint that allows matches to be viewed.
     """
     queryset = Match.objects.all().order_by('match_date')
     serializer_class = MatchSerializer
@@ -60,15 +60,15 @@ class MatchViewSet(BaseAuthorizedViewSet):
 
 class TeamViewSet(BaseAuthorizedViewSet):
     """
-    API endpoint that allows teams to be viewed or edited.
+    API endpoint that allows teams to be viewed.
     """
     queryset = Team.objects.all()
-    serializer_class = TeamSerializer
+    serializer_class = TeamSummarySerializer
 
 
 class PersonViewSet(BaseAuthorizedViewSet):
     """
-    API endpoint that allows persons to be viewed or edited.
+    API endpoint that allows persons to be viewed.
     """
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
@@ -76,7 +76,7 @@ class PersonViewSet(BaseAuthorizedViewSet):
 
 class InMatchEventViewSet(BaseAuthorizedViewSet):
     """
-    API endpoint that allows in-match events to be viewed or edited.
+    API endpoint that allows in-match events to be viewed.
     """
     queryset = InMatchEvent.objects.all()
     serializer_class = InMatchEventSerializer
