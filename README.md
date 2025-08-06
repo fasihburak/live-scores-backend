@@ -19,4 +19,4 @@ docker compose -f docker-compose.prod.yaml up -d
 ```
 
 ## To see the OpenAPI specs
-[Visit Swagger UI](https://livescores-backend.onenil.io/api/schema/swagger-ui/)
+[Visit Swagger UI](https://livescores-api.onenil.io/api/schema/swagger-ui/)
