@@ -7,6 +7,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiExam
     get=extend_schema(
         summary="WebSocket: Events in a match room",
         description=(
+            "This is not a REST Api endpoint. It is only for documenting the WebSocket endpoint."
             "Connect to this WebSocket endpoint to receive in-match-events in real-time.\n\n"
             "**Endpoint:** `ws/matches/{match_id}/in-match-events/`\n\n"
             "**Protocols:** WebSocket\n\n"
