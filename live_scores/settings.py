@@ -34,7 +34,7 @@ if DEBUG:
 else:
     SECRET_KEY = SECRET_DICT['DJANGO_SECRET_KEY']
 
-ALLOWED_HOSTS = ['livescores-api.onenil.io']
+ALLOWED_HOSTS = ['livescores-api.onenil.io', 'localhost']
 
 
 # Application definition
@@ -102,7 +102,7 @@ else:
         "default": {
             "BACKEND": "channels_redis.core.RedisChannelLayer",
             "CONFIG": {
-                "hosts": [(SECRET_DICT['REDIS_HOST'], int(SECRET_DICT['REDIS_PORT']))],
+                "hosts": [(SECRET_DICT['REDIS_HOST'], int(os.environ['REDIS_PORT']))],
             },
         },
     }
@@ -128,8 +128,8 @@ else:
         "default": {
             "ENGINE": "django.db.backends.postgresql",
             "HOST": SECRET_DICT['DB_HOST'],
-            "PORT": SECRET_DICT['DB_PORT'],
-            "NAME": SECRET_DICT['DB_NAME'],
+            "PORT": int(os.environ['DB_PORT']),
+            "NAME": os.environ['DB_NAME'],
             "USER": SECRET_DICT['DB_USERNAME'],
             "PASSWORD": SECRET_DICT['DB_PASSWORD'],
         }
