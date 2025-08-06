@@ -29,6 +29,8 @@ from scores.views import (
     UserViewSet, GroupViewSet, MatchViewSet, TeamViewSet,
     PersonViewSet, InMatchEventViewSet, CompetitionViewSet
 )
+from scores.ws_dummy_view import WebSocketDocumentationView
+
 
 router = routers.SimpleRouter()
 router.register(r'matches', MatchViewSet, basename='match')
@@ -44,6 +46,7 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api/', include(matches_router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api/ws/matches/<uuid:match_id>/in-match-events/', WebSocketDocumentationView.as_view(), name='ws-chat-doc'),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
