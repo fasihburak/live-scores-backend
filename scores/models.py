@@ -52,7 +52,7 @@ class Role(TimestampedModel):
 
 def get_default_team_id():
     from .models import Team
-    team, created = Team.objects.get_or_create(name="TBD", id=uuid.UUID(int=0))
+    team, created = Team.objects.get_or_create(name="TBD")
     return team.pk
 
 
