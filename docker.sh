@@ -27,19 +27,19 @@ docker rm livescores-backend || true
 
 # Run collectstatic inside the new container
 docker run --rm \
-    --env DEBUG=0 --env REDIS_PORT=6379 --env DB_PORT=5432 --env DB_NAME=livescores \
+    --env-file prod.env \
     "${ECR_REPO_URI}:${IMAGE_TAG}" \
     python manage.py collectstatic --noinput
 
 # Run migrations inside the new container
 docker run --rm \
-    --env DEBUG=0 --env REDIS_PORT=6379 --env DB_PORT=5432 --env DB_NAME=livescores \
+    --env-file prod.env \
     "${ECR_REPO_URI}:${IMAGE_TAG}" \
     python manage.py migrate --noinput
 
 # Run the container
 docker run -d \
-    --env DEBUG=0 --env REDIS_PORT=6379 --env DB_PORT=5432 --env DB_NAME=livescores \
+    --env-file prod.env \
     --name livescores-backend \
     -p 80:8001 \
     "${ECR_REPO_URI}:${IMAGE_TAG}" \
