@@ -97,7 +97,12 @@ jobs:
             fi
             sleep 5
           done
+          echo "SSM command failed with status: $STATUS"
+          aws ssm list-command-invocations \
+            --command-id "${{ steps.ssm.outputs.command_id }}" \
+            --details \
+            --region $AWS_REGION \
+            --output json | jq -r '.CommandInvocations[0].CommandPlugins[0] | "STDOUT:\n\(.Output)\nSTDERR:\n\(.StandardErrorContent)"'
           if [[ $STATUS != "Success" ]]; then
-            echo "SSM command failed with status: $STATUS"
             exit 1
           fi
