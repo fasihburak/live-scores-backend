@@ -32,6 +32,8 @@ echo "REDIS_PORT=6379 " >> $ENV_FILE_NAME
 echo "DB_PORT=5432 " >> $ENV_FILE_NAME 
 echo "DB_NAME=livescores" >> $ENV_FILE_NAME 
 
+echo CONTENT
+cat $ENV_FILE_NAME
 
 # Run collectstatic inside the new container
 docker run --rm \
