@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
+from socket import gethostbyname
+from socket import gethostname
 from . import secrets
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -35,10 +37,9 @@ else:
     SECRET_KEY = SECRET_DICT['DJANGO_SECRET_KEY']
 
 ALLOWED_HOSTS = ['livescores-api.onenil.io', 'localhost']
-
+ALLOWED_HOSTS.append(gethostbyname(gethostname()))
 
 # Application definition
-
 INSTALLED_APPS = [
     'daphne',
     'scores.apps.ScoresConfig',
