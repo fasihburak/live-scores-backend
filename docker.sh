@@ -27,10 +27,10 @@ docker rm livescores-backend || true
 
 ENV_FILE_NAME="prod.env" 
 touch $ENV_FILE_NAME
-echo "DEBUG=0" > $ENV_FILE_NAME 
-echo "REDIS_PORT=6379 " > $ENV_FILE_NAME 
-echo "DB_PORT=5432 " > $ENV_FILE_NAME 
-echo "DB_NAME=livescores" > $ENV_FILE_NAME 
+echo "DEBUG=0" >> $ENV_FILE_NAME 
+echo "REDIS_PORT=6379 " >> $ENV_FILE_NAME 
+echo "DB_PORT=5432 " >> $ENV_FILE_NAME 
+echo "DB_NAME=livescores" >> $ENV_FILE_NAME 
 
 
 # Run collectstatic inside the new container
