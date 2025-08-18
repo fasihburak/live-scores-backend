@@ -97,7 +97,7 @@ jobs:
             fi
             sleep 5
           done
-          echo "SSM command failed with status: $STATUS"
+          echo "SSM command exited with status: $STATUS"
           aws ssm list-command-invocations \
             --command-id "${{ steps.ssm.outputs.command_id }}" \
             --details \
