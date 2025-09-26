@@ -17,7 +17,7 @@ class TimestampedModel(models.Model):
 class Competition(TimestampedModel):
     name = models.CharField(max_length=200)
     scope = models.CharField(max_length=100, null=True, blank=True)
-    teams = models.ManyToManyField("Team", blank=True)
+    teams = models.ManyToManyField("Team", blank=True, related_name='competitions')
 
     def __str__(self):
         return self.name
@@ -26,8 +26,7 @@ class Competition(TimestampedModel):
 class Team(TimestampedModel):
     logo = models.ImageField(null=True, blank=True)
     name = models.CharField(max_length=200)
-    people = models.ManyToManyField("Person", blank=True)
-    competitions = models.ManyToManyField(Competition, blank=True)
+    people = models.ManyToManyField("Person", blank=True, related_name='teams')
 
     def __str__(self):
         return self.name
@@ -38,7 +37,6 @@ class Person(TimestampedModel):
     middle_name = models.CharField(max_length=200, null=True, blank=True)
     family_name = models.CharField(max_length=200, null=True, blank=True)
     birth_date = models.DateField(null=True, blank=True)
-    teams = models.ManyToManyField(Team, blank=True)
 
     def __str__(self):
         return f'{self.given_name} {self.family_name}'

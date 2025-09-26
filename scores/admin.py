@@ -36,11 +36,35 @@ logger = logging.getLogger(__name__)
 #         return super().save_model(request, obj, form, change)
 
 
+class PersonTeamInline(admin.TabularInline):
+    model = Team.people.through
+    extra = 1
+    fk_name = "person"
+
+
+class PersonAdmin(admin.ModelAdmin):
+    # Reverse side must be edited via the through-model inline:
+    inlines = [PersonTeamInline]
+
+
+class TeamCompetitionInline(admin.TabularInline):
+    model = Competition.teams.through
+    extra = 1
+    fk_name = "team"
+
+
+class TeamAdmin(admin.ModelAdmin):
+    filter_horizontal = ("people",)
+    inlines = [TeamCompetitionInline]
+
+
 class InMatchEventInline(admin.TabularInline):
     model = InMatchEvent
     extra = 0
     ordering = ['minute']  # order events by minute
 
+class CompetitionAdmin(admin.ModelAdmin):
+    filter_horizontal = ("teams",)
 
 class MatchAdmin(admin.ModelAdmin):
     inlines = [InMatchEventInline]
@@ -79,11 +103,10 @@ class MatchAdmin(admin.ModelAdmin):
 
     #     super().save_model(request, obj, form, change)
 
-
-admin.site.register(Person)
+admin.site.register(Person, PersonAdmin)
 admin.site.register(Role)
+admin.site.register(Team, TeamAdmin)
 # admin.site.register(InMatchEvent, InMatchEventAdmin)
 admin.site.register(InMatchEvent)
-admin.site.register(Team)
 admin.site.register(Match, MatchAdmin)
-admin.site.register(Competition)
+admin.site.register(Competition, CompetitionAdmin)
