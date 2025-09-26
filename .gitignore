@@ -2,3 +2,4 @@ __pycache__/
 venv/
 db.sqlite3
 media/
+insert_test_data.py
